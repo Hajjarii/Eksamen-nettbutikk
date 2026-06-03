@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kantine nettbutikk</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../images/" alt="logo (skal legge til)" style="height:48px; width:auto; display:block;" />
+        </div>
+    </nav>
+
+    <div class="innhold">
+        <div class="produkter">
+            <h2>Kjøp varer</h2>
+            <table class="produkt-tabell">
+                <tr>
+                    <th>Navn</th>
+                    <th>Pris</th>
+                    <th>Beskrivelse</th>
+                    <th>Lager</th>
+                    <th></th>
+                </tr>
+                {% for produkt in produkter %}
+                <tr>
+                    <td>{{ produkt[1] }}</td>
+                    <td>{{ produkt[2] }} kr</td>
+                    <td>{{ produkt[3] }}</td>
+                    <td>{{ produkt[4] }}</td>
+                    <td><button class="legg-til-btn">Legg i handlekurv</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
