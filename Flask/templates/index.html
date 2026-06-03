@@ -1,44 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kantine nettbutikk</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
-
 <body>
-
     <nav class="navbar">
-        <div class="logo">
-            <img src="../images/" alt="logo (skal legge til)" style="height:48px; width:auto; display:block;" />
+        <div class="navbar-inner">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Kantine logo" />
+                <span>Kantine</span>
+            </div>
+            <div class="nav-links">
+                <!-- Tom navbar for menyer og knapper -->
+            </div>
         </div>
     </nav>
 
     <div class="innhold">
-        <div class="produkter">
-            <h2>Kjøp varer</h2>
-            <table class="produkt-tabell">
-                <tr>
-                    <th>Navn</th>
-                    <th>Pris</th>
-                    <th>Beskrivelse</th>
-                    <th>Lager</th>
-                    <th></th>
-                </tr>
-                {% for produkt in produkter %}
-                <tr>
-                    <td>{{ produkt[1] }}</td>
-                    <td>{{ produkt[2] }} kr</td>
-                    <td>{{ produkt[3] }}</td>
-                    <td>{{ produkt[4] }}</td>
-                    <td><button class="legg-til-btn">Legg i handlekurv</button></td>
-                </tr>
-                {% endfor %}
-            </table>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="meldinger">
+            {% for kategori, melding in messages %}
+            <div class="melding {{ kategori }}">{{ melding }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="grid-layout">
+            <section class="produkter">
+                <h2>Kjøp varer</h2>
+                <table class="produkt-tabell">
+                    <tr>
+                        <th>Navn</th>
+                        <th>Pris</th>
+                        <th>Beskrivelse</th>
+                        <th>Lager</th>
+                        <th></th>
+                    </tr>
+                    {% for produkt in produkter %}
+                    <tr>
+                        <td>{{ produkt[1] }}</td>
+                        <td>{{ produkt[2] }} kr</td>
+                        <td>{{ produkt[3] }}</td>
+                        <td>{{ produkt[4] }}</td>
+                        <td>
+                            <a class="legg-til-btn" href="{{ url_for('legg_i_handlekurv', produkt_id=produkt[0]) }}">Legg i handlekurv</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </section>
+
+            <aside class="sidefelt">
+                <section class="handlekurv">
+                    <h2>Handlekurv</h2>
+                    {% if cart %}
+                    <table class="status-tabell">
+                        <tr>
+                            <th>Produkt</th>
+                            <th>Antall</th>
+                            <th>Sum</th>
+                        </tr>
+                        {% for item in cart %}
+                        <tr>
+                            <td>{{ item.navn }}</td>
+                            <td>{{ item.antall }}</td>
+                            <td>{{ item.pris * item.antall }} kr</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <a class="checkout-btn" href="{{ url_for('sjekk_ut') }}">Fullfør kjøp</a>
+                    {% else %}
+                    <p>Handlekurven er tom.</p>
+                    {% endif %}
+                </section>
+
+                <section class="historikk">
+                    <h2>Kjøpshistorikk</h2>
+                    {% if history %}
+                    <table class="status-tabell">
+                        <tr>
+                            <th>Produkt</th>
+                            <th>Antall</th>
+                            <th>Pris</th>
+                        </tr>
+                        {% for item in history %}
+                        <tr>
+                            <td>{{ item.navn }}</td>
+                            <td>{{ item.antall }}</td>
+                            <td>{{ item.pris * item.antall }} kr</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                    <p>Du har ikke kjøpt noe ennå.</p>
+                    {% endif %}
+                </section>
+            </aside>
         </div>
     </div>
-
 </body>
 </html>
